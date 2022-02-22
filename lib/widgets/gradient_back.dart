@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class GradientBack extends StatelessWidget {
 
 
-  String title = "Popular";
-  double height = 0.0;
+  final String title;
+  final double? height;
 
-  GradientBack(this.title, this.height);
+  GradientBack({Key? key, required this.title, required this.height});
 
   @override
   Widget build(BuildContext context) {

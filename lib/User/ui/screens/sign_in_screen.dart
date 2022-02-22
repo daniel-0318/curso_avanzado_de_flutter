@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/widgets/gradient_back.dart';
 import 'package:platzi_trips_app/widgets/button_green.dart';
+import 'package:platzi_trips_app/User/bloc/bloc_user.dart';
+import 'package:platzi_trips_app/platzi_trips.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInScreen extends StatefulWidget{
   @override
@@ -12,10 +16,28 @@ class SignInScreen extends StatefulWidget{
 }
 
 class _SignInScreen extends State<SignInScreen>{
+
+  late UserBloc userBloc;
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return singInGoogleUI();
+    userBloc = BlocProvider.of(context);
+    return _handleCurrentSession();
+  }
+
+  Widget _handleCurrentSession(){
+    return StreamBuilder(
+      stream:  userBloc.authStatus,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        //(Snapshot - data - Object User)
+        if(!snapshot.hasData || snapshot.hasError){
+          return singInGoogleUI();
+        }else{
+          return PlatziTrips();
+        }
+      },
+    );
   }
 
   Widget singInGoogleUI(){
@@ -23,7 +45,7 @@ class _SignInScreen extends State<SignInScreen>{
       body: Stack(
         alignment: Alignment.center,
         children: [
-          GradientBack("", null),
+          GradientBack(height: null, title: ''),
           Column(
             mainAxisAlignment:  MainAxisAlignment.center,
             children: [
@@ -38,7 +60,9 @@ class _SignInScreen extends State<SignInScreen>{
               ),
               ButtonGreen(
                   text: "Login with Gmail",
-                  onPressed: (){},
+                  onPressed: (){
+                    userBloc.singIn().then((value) => print("El usuario es ${value!.user!.displayName}"));
+                  },
                 width: 300.0,
                 height: 50.0,
               ),
