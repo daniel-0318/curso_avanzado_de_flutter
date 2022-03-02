@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:platzi_trips_app/User/model/User.dart' as userModel;
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/widgets/gradient_back.dart';
 import 'package:platzi_trips_app/widgets/button_green.dart';
@@ -50,19 +51,29 @@ class _SignInScreen extends State<SignInScreen>{
             mainAxisAlignment:  MainAxisAlignment.center,
             children: [
               Text(
-                  "Welcome \n This is your Travel App",
+                "Welcome \n This is your Travel App",
                 style: TextStyle(
-                  fontSize: 37.0,
-                  fontFamily: "Lato",
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold
+                    fontSize: 37.0,
+                    fontFamily: "Lato",
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold
                 ),
               ),
               ButtonGreen(
-                  text: "Login with Gmail",
-                  onPressed: (){
-                    userBloc.singIn().then((value) => print("El usuario es ${value!.user!.displayName}"));
-                  },
+                text: "Login with Gmail",
+                onPressed: () {
+                  userBloc.signIn()
+                      .then((UserCredential? user) {
+                    userBloc.updateUserData(
+                        userModel.User(
+                          uid: user?.user!.uid,
+                          name: (user?.user!.displayName).toString(),
+                          email: (user?.user!.email).toString(),
+                          photoURL: (user?.user!.photoURL).toString(),
+                        )
+                    );
+                  });
+                },
                 width: 300.0,
                 height: 50.0,
               ),
