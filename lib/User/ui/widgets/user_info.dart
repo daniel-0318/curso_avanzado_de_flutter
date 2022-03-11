@@ -49,9 +49,10 @@ class UserInfo extends StatelessWidget {
         ),
         Text(
             user.email,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 fontSize: 15.0,
-                color: Colors.white30,
+                color: Colors.white,
                 fontFamily: 'Lato'
             )
         ),

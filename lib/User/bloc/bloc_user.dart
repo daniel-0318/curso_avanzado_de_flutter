@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:platzi_trips_app/User/repository/auth_repository.dart';
 import 'package:platzi_trips_app/User/repository/cloud_firestore_repository.dart';
 
+import '../../Place/model/place.dart';
+
 class UserBloc implements Bloc{
 
   final _auth_repository = AuthRepository();
@@ -25,6 +27,8 @@ class UserBloc implements Bloc{
   //2. Registrar usuario e base de datos
   final _cloudFirestoreRepository = CloudFiresoreRepository();
   void updateUserData(userModel.User user) => _cloudFirestoreRepository.updateUserDataFirestore(user);
+  Future<void> updatePlaceDate(Place place) => _cloudFirestoreRepository.updatePlaceDate(place);
+
 
   signOut(){
     _auth_repository.signOut();
