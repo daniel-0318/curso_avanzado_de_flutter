@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
@@ -115,20 +116,28 @@ class _AddPlaceScreen extends State<AddPlaceScreen>{
                       //Id del usuario logeado actualmente
                       userBloc.currentUser().then((User? user){
                         if(user != null){
-
+                          String uid = user.uid;
+                          String path = "${uid}/${DateTime.now().toString()}.jpg";
+                          //change RULE in Firebase Storage console to = allow read, write: if request.auth != null;
+                          userBloc.uploadFile(path, widget.image).then((UploadTask uploadTask){
+                            uploadTask.then((TaskSnapshot snapshot){
+                              snapshot.ref.getDownloadURL().then((urlImage){
+                                print("URLIMAGE: ${urlImage}");
+                                //2. Cloud Firestore
+                                //Place - title, description, url, userOwner, likes
+                                userBloc.updatePlaceDate(Place(
+                                    name: _controllerTitlePlace.text,
+                                    description: _controllerDescriptionPlace.text,
+                                    likes: 0,
+                                    urlImage: urlImage
+                                )).whenComplete((){
+                                  print("Termino");
+                                  Navigator.pop(context);
+                                });
+                              });
+                            });
+                          });
                         }
-                      });
-
-                      //2. Cloud Firestore
-                      //Place - title, description, url, userOwner, likes
-                      userBloc.updatePlaceDate(Place(
-                        name: _controllerTitlePlace.text,
-                        description: _controllerDescriptionPlace.text,
-                        likes: 0,
-                        urlImage: ""
-                      )).whenComplete((){
-                        print("Termino");
-                        Navigator.pop(context);
                       });
                     },
                   ),
