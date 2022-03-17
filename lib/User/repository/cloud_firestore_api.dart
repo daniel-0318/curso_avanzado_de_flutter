@@ -19,7 +19,7 @@ class CloudFirestoreAPI{
       'email': user.email,
       'photoURL': user.photoURL,
       'myPlaces': user.myPlaces,
-      'muFavoritePlaces': user.myFavoritePlaces,
+      'myFavoritePlaces': user.myFavoritePlaces,
       'lastSignIn': DateTime.now()
     }, SetOptions(merge: true));
   }
@@ -31,7 +31,16 @@ class CloudFirestoreAPI{
       'name': place.name,
       'descrption': place.description,
       'likes': place.likes,
-      'userOwner': "${USERS}/${user!.uid}" //reference
+      'urlImage': place.urlImage,
+      'userOwner': _db.doc("${USERS}/${user!.uid}") //reference
+    }).then((DocumentReference dr) {
+      dr.get().then((DocumentSnapshot snapshot){
+        snapshot.id; //ID Place Referencia
+        DocumentReference refUsers = _db.collection(USERS).doc(user.uid);
+        refUsers.update({
+          'myPlaces': FieldValue.arrayUnion([_db.doc("${PLACES}/${snapshot.id}")])
+        });
+      });
     });
   }
 
