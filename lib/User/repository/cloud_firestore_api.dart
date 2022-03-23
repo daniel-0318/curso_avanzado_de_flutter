@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:platzi_trips_app/User/model/User.dart';
+import 'package:platzi_trips_app/User/ui/widgets/profile_place.dart';
 import '../../Place/model/place.dart';
 
 class CloudFirestoreAPI{
@@ -42,6 +43,15 @@ class CloudFirestoreAPI{
         });
       });
     });
+  }
+
+  List<ProfilePlace> buildPlaces(List<DocumentSnapshot> placesListSnapshot) {
+    List<ProfilePlace> profilePlaces = List<ProfilePlace>.empty(growable: true);
+    placesListSnapshot.forEach((p) {
+      profilePlaces.add(ProfilePlace(Place(name: p["name"], description: p["descrption"], urlImage: p["urlImage"])));
+    });
+    return profilePlaces;
+
   }
 
 }
