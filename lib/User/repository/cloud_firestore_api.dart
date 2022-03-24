@@ -48,7 +48,11 @@ class CloudFirestoreAPI{
   List<ProfilePlace> buildPlaces(List<DocumentSnapshot> placesListSnapshot) {
     List<ProfilePlace> profilePlaces = List<ProfilePlace>.empty(growable: true);
     placesListSnapshot.forEach((p) {
-      profilePlaces.add(ProfilePlace(Place(name: p["name"], description: p["descrption"], urlImage: p["urlImage"])));
+      profilePlaces.add(ProfilePlace(Place(
+        name: p["name"],
+        description: p["descrption"],
+        urlImage: p["urlImage"],
+        likes: p["likes"],)));
     });
     return profilePlaces;
 

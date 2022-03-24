@@ -9,29 +9,41 @@ import 'package:platzi_trips_app/widgets/button_green.dart';
 
 class ProfileHeader extends StatelessWidget {
 
-  late UserBloc userBloc;
   late User user;
+
+  ProfileHeader(this.user);
 
   @override
   Widget build(BuildContext context) {
-    userBloc = BlocProvider.of<UserBloc>(context);
-    return StreamBuilder(
-      stream: userBloc.streamFirebase,
-      builder: (BuildContext context, AsyncSnapshot snapshot){
-        switch(snapshot.connectionState){
-          case ConnectionState.waiting:
-            return CircularProgressIndicator();
-          case ConnectionState.none:
-            return CircularProgressIndicator();
-          case ConnectionState.active:
-            print("ConnectionState.active");
-            return showProfileData(snapshot, context);
-          case ConnectionState.done:
-            print("ConnectionState.done");
-            return showProfileData(snapshot, context);
-        }
-      },
+    final title = Text(
+      'Profile',
+      style: TextStyle(
+          fontFamily: 'Lato',
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 30.0
+      ),
     );
+
+    return Container(
+      margin: EdgeInsets.only(
+          left: 10.0,
+          right: 10.0,
+          top: 50.0
+      ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              title
+            ],
+          ),
+          UserInfo(user),
+          ButtonsBar()
+        ],
+      ),
+    );
+
   }
 
   Widget showProfileData(AsyncSnapshot snapshot, BuildContext context) {

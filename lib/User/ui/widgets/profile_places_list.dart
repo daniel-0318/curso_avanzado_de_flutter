@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:platzi_trips_app/User/bloc/bloc_user.dart';
+import 'package:platzi_trips_app/User/model/User.dart';
 import 'package:platzi_trips_app/User/ui/widgets/profile_place.dart';
 import 'package:platzi_trips_app/Place/model/place.dart';
 
 class ProfilePlacesList extends StatelessWidget {
 
   late UserBloc userBloc;
+  late User user;
+  ProfilePlacesList(this.user);
 
   Place place = Place(
       name: "Knuckles Mountains Range",
@@ -36,7 +39,7 @@ class ProfilePlacesList extends StatelessWidget {
           bottom: 10.0
       ),
       child: StreamBuilder(
-        stream: userBloc.placesStream,
+        stream: userBloc.myPlacesListStream(user.uid.toString()),
         builder: (context,AsyncSnapshot snapshot){
           print("*************************");
           print(snapshot.data.docs);
